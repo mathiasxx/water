@@ -3,6 +3,7 @@ package water
 import (
 	"errors"
 	"io"
+	"os"
 )
 
 // Interface is a TUN/TAP interface.
@@ -61,6 +62,32 @@ func New(config Config) (ifce *Interface, err error) {
 		return openDev(config)
 	default:
 		return nil, errors.New("unknown device type")
+	}
+}
+
+// New creates a new TUN/TAP interface using config and returns (file_descriptor, interface_name, error)
+func NewFD(config Config) (fd int, iname string, err error) {
+	if zeroConfig == config {
+		config = defaultConfig()
+	}
+	if config.PlatformSpecificParams == zeroConfig.PlatformSpecificParams {
+		config.PlatformSpecificParams = defaultPlatformSpecificParams()
+	}
+	switch config.DeviceType {
+	case TUN, TAP:
+		return openDevFD(config)
+	default:
+		return 0, "", errors.New("unknown device type")
+	}
+}
+
+func WrapTunFD(fd int, ifname string) *Interface {
+	return &Interface{
+		isTAP: false,
+		name:  ifname,
+		ReadWriteCloser: &tunReadCloser{
+			f: os.NewFile(uintptr(fd), ifname),
+		},
 	}
 }
 
