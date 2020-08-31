@@ -2,6 +2,7 @@ package water
 
 import (
 	"fmt"
+	"os"
 )
 
 // NewTAP creates a new TAP interface whose name is ifName. If ifName is empty, a
@@ -27,4 +28,12 @@ func NewTUN(ifName string) (ifce *Interface, err error) {
 	config := Config{DeviceType: TUN}
 	config.Name = ifName
 	return openDev(config)
+}
+
+func WrapTunFD(fd int, ifname string) *Interface {
+	return &Interface{
+		isTAP:           false,
+		ReadWriteCloser: os.NewFile(uintptr(fd), "tun"),
+		name:            ifname,
+	}
 }

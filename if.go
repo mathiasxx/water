@@ -3,7 +3,6 @@ package water
 import (
 	"errors"
 	"io"
-	"os"
 )
 
 // Interface is a TUN/TAP interface.
@@ -78,16 +77,6 @@ func NewFD(config Config) (fd int, iname string, err error) {
 		return openDevFD(config)
 	default:
 		return 0, "", errors.New("unknown device type")
-	}
-}
-
-func WrapTunFD(fd int, ifname string) *Interface {
-	return &Interface{
-		isTAP: false,
-		name:  ifname,
-		ReadWriteCloser: &tunReadCloser{
-			f: os.NewFile(uintptr(fd), ifname),
-		},
 	}
 }
 
