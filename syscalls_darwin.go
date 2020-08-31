@@ -172,6 +172,12 @@ func openDevSystem(config Config) (fd int, iname string, err error) {
 		return 0, "", fmt.Errorf("setting non-blocking error")
 	}
 
+	/* Hmm:
+	syscall.Syscall(syscall.SYS_IOCTL, uintptr(fd), uintptr(appleTUNSETOWNER), uintptr(ownerID))
+	syscall.Syscall(syscall.SYS_IOCTL, uintptr(fd), uintptr(appleTUNSETGROUP), uintptr(groupID))
+	syscall.Syscall(syscall.SYS_IOCTL, uintptr(fd), uintptr(appleTUNSETPERSIST), uintptr(1))
+	*/
+
 	/*
 		return &Interface{
 			isTAP: false,

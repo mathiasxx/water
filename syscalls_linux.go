@@ -1,6 +1,7 @@
 package water
 
 import (
+	"fmt"
 	"os"
 	"strings"
 	"syscall"
@@ -18,6 +19,10 @@ type ifReq struct {
 	Name  [0x10]byte
 	Flags uint16
 	pad   [0x28 - 0x10 - 2]byte
+}
+
+func openDevFD(config Config) (int, string, error) {
+	return 0, "", fmt.Errorf("openDevFD not implemented on linux")
 }
 
 func ioctl(fd uintptr, request uintptr, argp uintptr) error {
