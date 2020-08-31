@@ -1,4 +1,4 @@
-module github.com/water
+module github.com/mathiasxx/water
 
 go 1.14
 
